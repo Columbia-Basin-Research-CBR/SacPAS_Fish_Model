@@ -1,4 +1,4 @@
-# SACPAS
-SACPAS
+# SacPAS-Fish_Model
+SacPAS_Fish_Model
 
-Code blocks to share with others.
+Code blocks and resources to assist in running the Fish Model.
