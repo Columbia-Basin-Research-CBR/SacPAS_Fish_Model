@@ -77,7 +77,9 @@ print(as.numeric(result[11,2]))
 #==== 6. Automate comparison ====
 # Compare the hatching and incubation mortality model during the "critical years"
 # ALSO use only during the "critical water years"
-# relevant new token=value pairs: &mortality=hatchmort (default, thus explicit use is same as omiting) or &mortality=emergemort
+# relevant new token=value pairs introduced here: &mortality=hatchmort (default, thus explicit use is same as omiting) or &mortality=emergemort
+# In addition, we can accelerate delivery of outputs, if the plots are not needed
+# we add the following to the querystring: "&graphics=off"
 
  # initialize
 start <- Sys.time()
@@ -87,8 +89,6 @@ years <- c(2008,2014,2015,2021,2022)
 for(mort in c("hatchmort","emergemort")){
 	out <- NULL
 	for(i in 1:length(years)){
-	  ### Note that we can accelerate delivery of outputs without if the plots are not needed
-	  ### Add "&graphics=off" to the string as shown here
 		string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",years[i],"&tempyear=",years[i],"&graphics=off")
 		# print(string1)
 		result <- read_csv(string1,show_col_types=FALSE)
