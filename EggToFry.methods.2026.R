@@ -87,7 +87,9 @@ years <- c(2008,2014,2015,2021,2022)
 for(mort in c("hatchmort","emergemort")){
 	out <- NULL
 	for(i in 1:length(years)){
-		string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",years[i],"&tempyear=",years[i])
+	  ### Note that we can accelerate delivery of outputs without if the plots are not needed
+	  ### Add "&graphics=off" to the string as shown here
+		string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",years[i],"&tempyear=",years[i],"&graphics=off")
 		# print(string1)
 		result <- read_csv(string1,show_col_types=FALSE)
 		names(result) <- c("What",years[i])
@@ -119,7 +121,7 @@ years <- c("C","D","BN","AN","W")
 for(mort in c("hatchmort","emergemort")){
   out <- NULL
   for(i in 1:length(years)){
-    string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",paste0(years[i],".year"),"&tempyear=",paste0(years[i],".year") )
+    string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",paste0(years[i],".year"),"&tempyear=",paste0(years[i],".year"),"&graphics=off")
     # print(string1)
     result <- read_csv(string1,show_col_types=FALSE)
     names(result) <- c("What",years[i])
