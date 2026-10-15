@@ -26,7 +26,7 @@ library(tidyverse)
 
 #==== 2. Name a workspace directory ====
 # a string of numerals and characters
-myDIR <- "MYDIR1234"  # edit this value
+myDIR <- "MY1234"  # edit this value
 
 # use paste0() to assemble parts of a query string
 # It is recommended to put the directory ID in the first position
@@ -57,7 +57,7 @@ base <- paste0("https://cbr.washington.edu/sac-bin/fishmodel/getandplottemp.pl?d
 # NOTE: &generatequery=1 is removed in order to obtain results directly
 # Example query
 # Build up the query string 
-base1 <- paste0(base,"&tempsource=dbtemp&redds=dbcarcass&raw=13")
+base1 <- paste0(base,"&tempsource=dbtemp&redds=historical&reddssurvey=dbcarcass&raw=13")
 
 # add controls as needed  and continue to make the string more compact:
 string1 <- paste0(base1,"&reddyear=2022&tempyear=2022")
@@ -70,7 +70,7 @@ print(string1)
 result <- read_csv(string1,show_col_types = FALSE)
 print(result)
 # Results with single value E.g. raw=1, grand survival are captured with scan. 
-print(scan(paste0(base,"&reddyear=2022&tempsource=dbtemp&tempyear=2022&redds=dbcarcass&raw=1")))
+print(scan(paste0(base,"&reddyear=2022&tempsource=dbtemp&tempyear=2022&redds=historical&reddssurvey=dbcarcass&raw=1")))
 print(as.numeric(result$Value[grepl("Incubation Survival",result$What)]))
 print(as.numeric(result[11,2]))
 
@@ -109,27 +109,9 @@ print(report)
 print("All-incubation TDM Mortality")
 print(report2)
 
-#==== 9. Forecast example
-# At time of writing in September 1, 2026, there is NO forecast for 2026 season 
-# so future is filled-in with historical mean.
-# NOTE:  &temponly=on is appropriate for ALL redd combination(s) 
-# Density effects are calibrated with winter-run carcass survey data, historical year, only.
-# These are equivalent:
-test <- read_csv(paste0(base,"&temponly=on&redds=dbAll&reddyear=2026&tempyear=2026&raw=13"),show_col_types = FALSE)
-print(test)
-test <- read_csv(paste0(base,"&temponly=on&redds=dbAll&reddyear=2026&tempsource=latest&raw=13"),show_col_types = FALSE)
-print(test)
 
-#==== 10. Scenario runs with user files ====
-# Requires pre-loading user files and then applying similar token value pairs that reference the files as data sources
-# Your formatted files of temperature and/or redd distribution scenarios will be placed in local directory
-# querystring methods allow you to access the contents of any file and recover an inventory 
-# Contact CBR staff at web@cbr.washington.edu for file handling
-# The mortality and development equations can be configured with &token=value pairs for the coefficients.
-
- 
-#==== 11. Some comparisons in greater depth ====
-
+#==== 8. Some comparisons in greater depth ====
+# model and examin differences in the mortality models across water year types
 # initialize
 start <- Sys.time()
 hatchmortresults <- emergemortresults <- NULL
@@ -137,7 +119,7 @@ years <- c("C","D","BN","AN","W")
 for(mort in c("hatchmort","emergemort")){
   out <- NULL
   for(i in 1:length(years)){
-    string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",paste0(years[i],),"&tempyear=",paste0(years[i],".year") )
+    string1 <- paste0(base1,"&mortality=",mort,"&reddyear=",paste0(years[i],".year"),"&tempyear=",paste0(years[i],".year") )
     # print(string1)
     result <- read_csv(string1,show_col_types=FALSE)
     names(result) <- c("What",years[i])
@@ -150,4 +132,15 @@ for(mort in c("hatchmort","emergemort")){
 
 end <- Sys.time()
 print(end-start) 
+print(hatchmortresults)
+print(emergemortresults)
+
+
+#==== 9. Scenario runs with user files ====
+# Requires pre-loading user files and then applying similar token value pairs that reference the files as data sources
+# Your formatted files of temperature and/or redd distribution scenarios will be placed in local directory
+# querystring methods allow you to access the contents of any file and recover an inventory 
+# Contact CBR staff at web@cbr.washington.edu for file handling
+# The mortality and development equations can be configured with &token=value pairs for the coefficients.
+
 
